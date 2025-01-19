@@ -32,7 +32,7 @@ func NewTCPTransport(listenAddr string) *TCPTransport {
 	}
 }
 
-func (t *TCPTransport) listenAndAccept() error {
+func (t *TCPTransport) ListenAndAccept() error {
 	var err error
 	t.listener, err = net.Listen("tcp", t.listenAddress)
 	if err != nil {
@@ -56,5 +56,6 @@ func (t *TCPTransport) startAcceptLoop() {
 }
 
 func (t *TCPTransport) handleConn(conn net.Conn) {
-	fmt.Printf("new incoming connection %+v\n", conn)
+	p := NewTCPPeer(conn, false)
+	fmt.Printf("new incoming connection %+v\n", p)
 }
