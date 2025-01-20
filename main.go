@@ -7,7 +7,7 @@ import (
 	"github.com/Undercover-developer/ipfs/p2p"
 )
 
-func OnPeer(p2p.Peer) error {
+func OnPeer(peer p2p.Peer) error {
 	//testing peering logic
 	fmt.Println("peering...")
 	return nil
