@@ -69,5 +69,16 @@ func (t *TCPTransport) handleConn(conn net.Conn) {
 		fmt.Printf("TCP handshake error: %s\n", err)
 		return
 	}
-	fmt.Printf("new incoming connection %+v\n", p)
+
+	msg := &Message{}
+
+	for {
+		if err := t.Decoder.Decode(conn, msg); err != nil {
+			fmt.Printf("TCP error: %s\n", err)
+			continue
+		}
+		msg.From = conn.RemoteAddr()
+		fmt.Printf("message %+v from %s\n", msg.Payload, msg.From)
+	}
+
 }

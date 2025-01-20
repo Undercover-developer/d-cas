@@ -12,6 +12,7 @@ func main() {
 	opts := p2p.TCPTransportOpts{
 		ListenAddress:    ":4000",
 		HandshakeHandler: p2p.NOPHandshakeFunc,
+		Decoder:          p2p.DefaultDecoder{},
 	}
 	tr := p2p.NewTCPTransport(opts)
 	if err := tr.ListenAndAccept(); err != nil {
