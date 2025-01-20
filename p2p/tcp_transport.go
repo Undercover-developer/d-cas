@@ -19,9 +19,9 @@ func NewTCPPeer(conn net.Conn, outbound bool) *TCPPeer {
 }
 
 type TCPTransportOpts struct {
-	listenAddress    string
-	handshakeHandler HandshakeFunc
-	decoder          Decoder
+	ListenAddress    string
+	HandshakeHandler HandshakeFunc
+	Decoder          Decoder
 }
 
 type TCPTransport struct {
@@ -40,7 +40,7 @@ func NewTCPTransport(opts TCPTransportOpts) *TCPTransport {
 
 func (t *TCPTransport) ListenAndAccept() error {
 	var err error
-	t.listener, err = net.Listen("tcp", t.listenAddress)
+	t.listener, err = net.Listen("tcp", t.ListenAddress)
 	if err != nil {
 		return err
 	}
@@ -64,7 +64,7 @@ func (t *TCPTransport) startAcceptLoop() {
 func (t *TCPTransport) handleConn(conn net.Conn) {
 	p := NewTCPPeer(conn, false)
 
-	if err := t.handshakeHandler(p); err != nil {
+	if err := t.HandshakeHandler(p); err != nil {
 		conn.Close()
 		fmt.Printf("TCP handshake error: %s\n", err)
 		return

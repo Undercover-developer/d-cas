@@ -8,8 +8,12 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello world")
-	tr := p2p.NewTCPTransport(":4000")
+	fmt.Println("Starting server ...")
+	opts := p2p.TCPTransportOpts{
+		ListenAddress:    ":4000",
+		HandshakeHandler: p2p.NOPHandshakeFunc,
+	}
+	tr := p2p.NewTCPTransport(opts)
 	if err := tr.ListenAndAccept(); err != nil {
 		log.Fatal(err)
 	}
