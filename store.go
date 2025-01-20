@@ -12,11 +12,11 @@ import (
 
 type PathKey struct {
 	Pathname string
-	Original string
+	Filename string
 }
 
-func (p PathKey) Filename() string {
-	return fmt.Sprintf("%s/%s", p.Pathname, p.Original)
+func (p PathKey) FullPath() string {
+	return fmt.Sprintf("%s/%s", p.Pathname, p.Filename)
 }
 
 type PathTransformFunc func(string) PathKey
@@ -39,7 +39,7 @@ func CASPathTransformFunc(key string) PathKey {
 	}
 	return PathKey{
 		Pathname: strings.Join(paths, "/"),
-		Original: hasStr,
+		Filename: hasStr,
 	}
 }
 
@@ -57,17 +57,19 @@ func NewStore(opts StoreOpts) *Store {
 	}
 }
 
-func (s *Store) WriteStream(key string, r io.Reader) error {
+// func (s *Store) readStream(key string) (io.Reader, error) {
+// 	pathKey := s.PathTransformFunc(key)
+
+// 	f, err := os.Open(p)
+// }
+
+func (s *Store) writeStream(key string, r io.Reader) error {
 	pathKey := s.PathTransformFunc(key)
 	if err := os.MkdirAll(pathKey.Pathname, os.ModePerm); err != nil {
 		return err
 	}
 
-	// buff := new(bytes.Buffer)
-	// io.Copy(buff, r)
-	// filenameBytes := md5.Sum(buff.Bytes())
-	// filename := hex.EncodeToString(filenameBytes[:])
-	pathAndFilename := pathKey.Filename()
+	pathAndFilename := pathKey.FullPath()
 
 	f, err := os.Create(pathAndFilename)
 	if err != nil {
