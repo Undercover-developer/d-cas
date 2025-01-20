@@ -15,6 +15,15 @@ func main() {
 		Decoder:          p2p.DefaultDecoder{},
 	}
 	tr := p2p.NewTCPTransport(opts)
+
+	//testing rpc channel
+	go func() {
+		for {
+			msg := <-tr.Consume()
+			fmt.Println(msg)
+		}
+	}()
+
 	if err := tr.ListenAndAccept(); err != nil {
 		log.Fatal(err)
 	}
