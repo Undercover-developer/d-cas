@@ -22,6 +22,7 @@ type TCPTransport struct {
 	listenAddress    string
 	listener         net.Listener
 	handshakeHandler HandshakeFunc
+	decoder          Decoder
 
 	mu    sync.RWMutex
 	peers map[net.Addr]Peer
@@ -60,8 +61,10 @@ func (t *TCPTransport) startAcceptLoop() {
 func (t *TCPTransport) handleConn(conn net.Conn) {
 	p := NewTCPPeer(conn, false)
 
-	// if err := t.handshakeHandler(conn); err != nil {
-
-	// }
+	if err := t.handshakeHandler(p); err != nil {
+		conn.Close()
+		fmt.Printf("TCP handshake error: %s\n", err)
+		return
+	}
 	fmt.Printf("new incoming connection %+v\n", p)
 }
